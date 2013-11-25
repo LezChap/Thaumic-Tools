@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import lezchap.thaumictools.setup.*;
 import lezchap.thaumictools.items.*;
 import thaumcraft.api.aspects.Aspect;
@@ -24,7 +25,7 @@ import thaumcraft.api.crafting.ShapedArcaneRecipe;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 import thaumcraft.api.ItemApi;
 
-@Mod(modid="ThaumicTools", name="ThaumicTools", version="0.0.5",
+@Mod(modid="ThaumicTools", name="ThaumicTools", version="0.0.6",
 dependencies = "required-after:Thaumcraft")
 @NetworkMod(clientSideRequired=true)
 
@@ -71,9 +72,9 @@ public class ThaumicTools {
         //@PostInit   // used in 1.5.2
         public void postInit(FMLPostInitializationEvent event) {
                 // Stub Method
-        	GameRegistry.addRecipe(new ItemStack(thaumiumShearsItem), " S", "S ", Character.valueOf('S'), ItemApi.getItem("itemResource", 2));
-        	GameRegistry.addRecipe(new ItemStack(thaumiumRodItem, 2), "S", "S", Character.valueOf('S'), ItemApi.getItem("itemResource", 2));
-        	GameRegistry.addRecipe(new ItemStack(thaumiumFishingPoleItem),  "  T", " TS", "K S", Character.valueOf('T'), new ItemStack(thaumiumRodItem), Character.valueOf('S'), new ItemStack(Item.silk), Character.valueOf('K'), new ItemStack(Item.stick));
-        	GameRegistry.addRecipe(new ItemStack(thaumiumPoleandCarrotItem), "F", "C", Character.valueOf('F'), new ItemStack(thaumiumFishingPoleItem), Character.valueOf('C'), new ItemStack(Item.carrot));
+        	GameRegistry.addRecipe(new ItemStack(thaumiumShearsItem, 1), " S", "S ", Character.valueOf('S'), ItemApi.getItem("itemResource", 2));
+        	/*GameRegistry.addRecipe(new ItemStack(thaumiumRodItem, 2), "S", "S", Character.valueOf('S'), ItemApi.getItem("itemResource", 2)); */
+        	GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(thaumiumFishingPoleItem, 1), new Object[] {  "  T", " TS", "K S", Character.valueOf('T'), ItemApi.getItem("itemResource", 2), Character.valueOf('S'), new ItemStack(Item.silk), Character.valueOf('K'), "stickWood"}));
+        	GameRegistry.addRecipe(new ItemStack(thaumiumPoleandCarrotItem, 1), "F", "C", Character.valueOf('F'), new ItemStack(thaumiumFishingPoleItem), Character.valueOf('C'), new ItemStack(Item.carrot));
         }
 }
