@@ -195,7 +195,7 @@ public class EntityFishHook extends Entity
             {
                 ItemStack itemstack = this.angler.getCurrentEquippedItem();
 
-                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || itemstack.getItem() != Item.fishingRod || this.getDistanceSqToEntity(this.angler) > 1024.0D)
+                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || (itemstack.getItem() != Item.fishingRod || itemstack.getItem() != ThaumicTools.thaumiumFishingPoleItem) || this.getDistanceSqToEntity(this.angler) > 1024.0D)
                 {
                     this.setDead();
                     this.angler.fishEntity = null;
