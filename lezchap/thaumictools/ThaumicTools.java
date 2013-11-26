@@ -24,17 +24,18 @@ import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapedArcaneRecipe;
 import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 import thaumcraft.api.ItemApi;
+import thaumcraft.api.ThaumcraftApi;
 
-@Mod(modid="ThaumicTools", name="ThaumicTools", version="0.0.6",
+@Mod(modid="ThaumicTools", name="ThaumicTools", version="0.0.7",
 dependencies = "required-after:Thaumcraft")
 @NetworkMod(clientSideRequired=true)
 
 public class ThaumicTools {
-	
-		public static Item thaumiumShearsItem;
-	    public static Item thaumiumFishingPoleItem;
-	    public static Item thaumiumRodItem;
-	    public static Item thaumiumPoleandCarrotItem;
+        
+                public static Item thaumiumShearsItem;
+            public static Item thaumiumFishingPoleItem;
+            public static Item thaumiumRodItem;
+            public static Item thaumiumPoleandCarrotItem;
     
         // The instance of your mod that Forge uses.
         @Instance(value = "ThaumicTools")
@@ -48,15 +49,15 @@ public class ThaumicTools {
         //@PreInit    // used in 1.5.2
         public void preInit(FMLPreInitializationEvent event) {
                 // Stub Method
-        	File configFile = event.getSuggestedConfigurationFile();
-        	TTConfig.loadConfig(configFile);
+                File configFile = event.getSuggestedConfigurationFile();
+                TTConfig.loadConfig(configFile);
         }
         
         @EventHandler // used in 1.6.2
         //@Init       // used in 1.5.2
         public void load(FMLInitializationEvent event) {
-        	thaumiumShearsItem = (new ItemThaumiumShears(TTConfig.thaumiumShearsItemId.getInt())).setUnlocalizedName("tt.shears");
-            thaumiumFishingPoleItem = (new ItemThaumiumFishingPole(TTConfig.thaumiumFishingPoleItemId.getInt())).setUnlocalizedName("tt.fishing.pole");
+                thaumiumShearsItem = (new ItemThaumiumShears(TTConfig.thaumiumShearsItemId.getInt(), ThaumcraftApi.toolMatThaumium).setUnlocalizedName("tt.shears"));
+            thaumiumFishingPoleItem = (new ItemThaumiumFishingPole(TTConfig.thaumiumFishingPoleItemId.getInt(), ThaumcraftApi.toolMatThaumium).setUnlocalizedName("tt.fishing.pole"));
             thaumiumRodItem = (new ItemThaumiumRod(TTConfig.thaumiumRodItemId.getInt())).setUnlocalizedName("tt.rod").setMaxStackSize(64);
             thaumiumPoleandCarrotItem = (new ItemThaumiumPoleandCarrot(TTConfig.thaumiumPoleandCarrotItemId.getInt())).setUnlocalizedName("tt.pole.and.carrot");
             
@@ -72,9 +73,9 @@ public class ThaumicTools {
         //@PostInit   // used in 1.5.2
         public void postInit(FMLPostInitializationEvent event) {
                 // Stub Method
-        	GameRegistry.addRecipe(new ItemStack(thaumiumShearsItem, 1), " S", "S ", Character.valueOf('S'), ItemApi.getItem("itemResource", 2));
-        	/*GameRegistry.addRecipe(new ItemStack(thaumiumRodItem, 2), "S", "S", Character.valueOf('S'), ItemApi.getItem("itemResource", 2)); */
-        	GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(thaumiumFishingPoleItem, 1), new Object[] {  "  T", " TS", "K S", Character.valueOf('T'), ItemApi.getItem("itemResource", 2), Character.valueOf('S'), new ItemStack(Item.silk), Character.valueOf('K'), "stickWood"}));
-        	GameRegistry.addRecipe(new ItemStack(thaumiumPoleandCarrotItem, 1), "F", "C", Character.valueOf('F'), new ItemStack(thaumiumFishingPoleItem), Character.valueOf('C'), new ItemStack(Item.carrot));
+                GameRegistry.addRecipe(new ItemStack(thaumiumShearsItem, 1), " S", "S ", Character.valueOf('S'), ItemApi.getItem("itemResource", 2));
+                /*GameRegistry.addRecipe(new ItemStack(thaumiumRodItem, 2), "S", "S", Character.valueOf('S'), ItemApi.getItem("itemResource", 2)); */
+                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(thaumiumFishingPoleItem, 1), new Object[] {  "  T", " TS", "K S", Character.valueOf('T'), ItemApi.getItem("itemResource", 2), Character.valueOf('S'), new ItemStack(Item.silk), Character.valueOf('K'), "stickWood"}));
+                GameRegistry.addRecipe(new ItemStack(thaumiumPoleandCarrotItem, 1), "F", "C", Character.valueOf('F'), new ItemStack(thaumiumFishingPoleItem), Character.valueOf('C'), new ItemStack(Item.carrot));
         }
 }
