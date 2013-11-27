@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 @MCVersion(value = "1.6.4")
 public class FishHookFMLLoadingPlugin implements cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 	
-	//declare a placeholder for the name and location of the CreeperBurnCore_dummy.jar
+	//declare a placeholder for the name and location of the jar
 	public static File location;
 
 	@Override

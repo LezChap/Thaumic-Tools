@@ -26,13 +26,13 @@ import thaumcraft.api.crafting.ShapelessArcaneRecipe;
 import thaumcraft.api.ItemApi;
 import thaumcraft.api.ThaumcraftApi;
 
-@Mod(modid="ThaumicTools", name="ThaumicTools", version="0.0.7",
+@Mod(modid="ThaumicTools", name="ThaumicTools", version="0.0.8",
 dependencies = "required-after:Thaumcraft")
 @NetworkMod(clientSideRequired=true)
 
 public class ThaumicTools {
         
-                public static Item thaumiumShearsItem;
+            public static Item thaumiumShearsItem;
             public static Item thaumiumFishingPoleItem;
             public static Item thaumiumRodItem;
             public static Item thaumiumPoleandCarrotItem;

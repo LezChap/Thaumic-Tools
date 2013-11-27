@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.List;
+import java.util.Random;
 
 import lezchap.thaumictools.ThaumicTools;
 import net.minecraft.block.material.Material;
@@ -21,6 +22,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.enchantment.EnchantmentHelper;
+
 
 public class EntityFishHook extends Entity
 {
@@ -59,7 +62,7 @@ public class EntityFishHook extends Entity
     private double velocityY;
     @SideOnly(Side.CLIENT)
     private double velocityZ;
-
+    
     public EntityFishHook(World par1World)
     {
         super(par1World);
@@ -195,7 +198,7 @@ public class EntityFishHook extends Entity
             {
                 ItemStack itemstack = this.angler.getCurrentEquippedItem();
 
-                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || (itemstack.getItem() != Item.fishingRod || itemstack.getItem() != ThaumicTools.thaumiumFishingPoleItem) || this.getDistanceSqToEntity(this.angler) > 1024.0D)
+                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || (itemstack.getItem() != Item.fishingRod && itemstack.getItem() != ThaumicTools.thaumiumFishingPoleItem) || this.getDistanceSqToEntity(this.angler) > 1024.0D)
                 {
                     this.setDead();
                     this.angler.fishEntity = null;
@@ -366,16 +369,49 @@ public class EntityFishHook extends Entity
                     }
                     else
                     {
-                        short short1 = 500;
+                    	int efficiencyLvl = EnchantmentHelper.getEfficiencyModifier(this.angler);
+                    	short short1 = 500;
+                    	switch (efficiencyLvl) {
+	                        case 1:  short1 = 420;
+	                                 break;
+	                        case 2:  short1 = 340;
+	                                 break;
+	                        case 3:  short1 = 260;
+	                                 break;
+	                        case 4:  short1 = 180;
+	                                 break;
+	                        case 5:  short1 = 100;
+	                                 break;
+	                        default: short1 = 500;
+	                                 break;
+                    	}
 
                         if (this.worldObj.canLightningStrikeAt(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) + 1, MathHelper.floor_double(this.posZ)))
                         {
-                            short1 = 300;
+                        	switch (efficiencyLvl) {
+		                        case 1:  short1 = 252;
+		                                 break;
+		                        case 2:  short1 = 204;
+		                                 break;
+		                        case 3:  short1 = 156;
+		                                 break;
+		                        case 4:  short1 = 108;
+		                                 break;
+		                        case 5:  short1 = 60;
+		                                 break;
+		                        default: short1 = 300;
+		                                 break;
+                    	}
                         }
 
                         if (this.rand.nextInt(short1) == 0)
                         {
-                            this.ticksCatchable = this.rand.nextInt(30) + 10;
+                        	int catchableMultiplier;
+                        	if (EnchantmentHelper.getSilkTouchModifier(this.angler))
+                        		catchableMultiplier = 5;
+                        	else
+                        		catchableMultiplier = 2;
+                            this.ticksCatchable = Math.round((this.rand.nextInt(30) + 10) * (catchableMultiplier/2));
                             this.motionY -= 0.20000000298023224D;
                             this.playSound("random.splash", 0.25F, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
                             float f3 = (float)MathHelper.floor_double(this.boundingBox.minY);
@@ -478,7 +514,13 @@ public class EntityFishHook extends Entity
             }
             else if (this.ticksCatchable > 0)
             {
-                EntityItem entityitem = new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.fishRaw));
+            	int fortuneModifier = EnchantmentHelper.getFortuneModifier(this.angler);
+            	int totalFish;
+				if (fortuneModifier > 0) 
+					totalFish = this.rand.nextInt(fortuneModifier)+1;
+				else
+					totalFish = 1;
+            	EntityItem entityitem = new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, new ItemStack(Item.fishRaw, totalFish));
                 double d5 = this.angler.posX - this.posX;
                 double d6 = this.angler.posY - this.posY;
                 double d7 = this.angler.posZ - this.posZ;

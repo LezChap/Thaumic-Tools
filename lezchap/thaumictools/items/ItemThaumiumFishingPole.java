@@ -45,18 +45,18 @@ public class ItemThaumiumFishingPole extends ItemTool implements IRepairable
     @Override
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-    	LoggerHelper.log(Level.INFO, "Right Clicked");
+    	///LoggerHelper.log(Level.INFO, "Right Clicked");
         if (par3EntityPlayer.fishEntity != null)
         {
             int i = par3EntityPlayer.fishEntity.catchFish();
             par1ItemStack.damageItem(i, par3EntityPlayer);
             par3EntityPlayer.swingItem();
-            LoggerHelper.log(Level.INFO, "Entity!=null");
+            //LoggerHelper.log(Level.INFO, "Entity!=null");
         }
         else
         {
             par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-            LoggerHelper.log(Level.INFO, "Entity=null");
+           // LoggerHelper.log(Level.INFO, "Entity=null");
             if (!par2World.isRemote)
             {
                 par2World.spawnEntityInWorld(new EntityFishHook(par2World, par3EntityPlayer));
