@@ -1,20 +1,31 @@
 package net.minecraft.entity.projectile;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
-import lezchap.thaumictools.ThaumicTools;
+import lezchap.thaumictools.items.ItemInfusedFishingPole;
+import lezchap.ttcore.IFishingPole;
+import lezchap.ttcore.PacketHandler;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.logging.LogAgent;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -23,10 +34,13 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.item.ItemFishingRod;
+
 
 
 public class EntityFishHook extends Entity
 {
+	public static final Logger logger = Logger.getLogger("EntityFishHook");
     /** The tile this entity is on, X position */
     private int xTile;
 
@@ -44,6 +58,7 @@ public class EntityFishHook extends Entity
 
     /** the number of ticks remaining until this fish can no longer be caught */
     private int ticksCatchable;
+    public int hookedTimer = 1000;
 
     /**
      * The entity that the fishing rod is connected to, if any. When you right click on the fishing rod and the hook
@@ -104,9 +119,12 @@ public class EntityFishHook extends Entity
         this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
         this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f);
         this.calculateVelocity(this.motionX, this.motionY, this.motionZ, 1.5F, 1.0F);
+        int hookedTimer = 1000;
+        logger.setParent(FMLCommonHandler.instance().getFMLLogger());
     }
 
     protected void entityInit() {}
+    
 
     @SideOnly(Side.CLIENT)
 
@@ -178,7 +196,7 @@ public class EntityFishHook extends Entity
      */
     public void onUpdate()
     {
-        super.onUpdate();
+    	super.onUpdate();
 
         if (this.fishPosRotationIncrements > 0)
         {
@@ -198,7 +216,7 @@ public class EntityFishHook extends Entity
             {
                 ItemStack itemstack = this.angler.getCurrentEquippedItem();
 
-                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || (itemstack.getItem() != Item.fishingRod && itemstack.getItem() != ThaumicTools.thaumiumFishingPoleItem) || this.getDistanceSqToEntity(this.angler) > 1024.0D)
+                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || (!(itemstack.getItem() instanceof ItemFishingRod) && !(itemstack.getItem() instanceof IFishingPole)) || this.getDistanceSqToEntity(this.angler) > 1024.0D)
                 {
                     this.setDead();
                     this.angler.fishEntity = null;
@@ -282,7 +300,7 @@ public class EntityFishHook extends Entity
                     {
                         d5 = vec3.distanceTo(movingobjectposition1.hitVec);
 
-                        if (d5 < d4 || d4 == 0.0D)
+                        if ((d5 < d4) || (d4 == 0.0D))
                         {
                             entity = entity1;
                             d4 = d5;
@@ -369,43 +387,73 @@ public class EntityFishHook extends Entity
                     }
                     else
                     {
+                    	if (!this.worldObj.isRemote) {
                     	int efficiencyLvl = EnchantmentHelper.getEfficiencyModifier(this.angler);
                     	short short1 = 500;
                     	switch (efficiencyLvl) {
-	                        case 1:  short1 = 420;
-	                                 break;
-	                        case 2:  short1 = 340;
-	                                 break;
-	                        case 3:  short1 = 260;
-	                                 break;
-	                        case 4:  short1 = 180;
-	                                 break;
-	                        case 5:  short1 = 100;
-	                                 break;
-	                        default: short1 = 500;
-	                                 break;
+                            case 1:  short1 = 420;
+                                     break;
+                            case 2:  short1 = 340;
+                                     break;
+                            case 3:  short1 = 260;
+                                     break;
+                            case 4:  short1 = 180;
+                                     break;
+                            case 5:  short1 = 100;
+                                     break;
+                            default: short1 = 500;
+                                     break;
                     	}
 
                         if (this.worldObj.canLightningStrikeAt(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) + 1, MathHelper.floor_double(this.posZ)))
                         {
                         	switch (efficiencyLvl) {
-		                        case 1:  short1 = 252;
-		                                 break;
-		                        case 2:  short1 = 204;
-		                                 break;
-		                        case 3:  short1 = 156;
-		                                 break;
-		                        case 4:  short1 = 108;
-		                                 break;
-		                        case 5:  short1 = 60;
-		                                 break;
-		                        default: short1 = 300;
-		                                 break;
-                    	}
+                                case 1:  short1 = 252;
+                                         break;
+                                case 2:  short1 = 204;
+                                         break;
+                                case 3:  short1 = 156;
+                                         break;
+                                case 4:  short1 = 108;
+                                         break;
+                                case 5:  short1 = 60;
+                                         break;
+                                default: short1 = 300;
+                                         break;
+                        	}
+                        }
+                    	ItemStack itemstack = this.angler.getCurrentEquippedItem();
+                        
+                        if ((itemstack.getItem() instanceof ItemInfusedFishingPole) && this.hookedTimer == 1000) {
+                        	this.hookedTimer = this.rand.nextInt(short1);
+                        	EntityFishHook.logger.info("InfusedFishingPole set HookedTimer:"+this.hookedTimer);
+                        }
+                        else if ((this.rand.nextInt(short1) == 0) && this.hookedTimer == 1000)
+                        	this.hookedTimer = 0;
+                        
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream(4);
+                        DataOutputStream outputStream = new DataOutputStream(bos);
+                        try {
+                                outputStream.writeInt(this.hookedTimer);
+                        } catch (Exception ex) {
+                                ex.printStackTrace();
                         }
 
-                        if (this.rand.nextInt(short1) == 0)
+                        Packet250CustomPayload packet = new Packet250CustomPayload();
+                        packet.channel = "TTCoreTimer";
+                        packet.data = bos.toByteArray();
+                        packet.length = bos.size();
+                        
+                        PacketDispatcher.sendPacketToPlayer(packet, (Player)this.angler);
+
+                    	}
+                    	else 
+                    		this.hookedTimer = PacketHandler.hookedTimer;
+                        
+                        //EntityFishHook.logger.info("hookedTimer="+hookedTimer+" this.hookedTimer="+this.hookedTimer);
+                        if (this.hookedTimer == 0)
                         {
+                        	this.hookedTimer = 1000;
                         	int catchableMultiplier;
                         	if (EnchantmentHelper.getSilkTouchModifier(this.angler))
                         		catchableMultiplier = 5;
@@ -433,6 +481,8 @@ public class EntityFishHook extends Entity
                                 this.worldObj.spawnParticle("splash", this.posX + (double)f5, (double)(f3 + 1.0F), this.posZ + (double)f4, this.motionX, this.motionY, this.motionZ);
                             }
                         }
+                        else
+                        	--this.hookedTimer;
                     }
                 }
 
@@ -489,7 +539,7 @@ public class EntityFishHook extends Entity
     {
         return 0.0F;
     }
-
+    
     public int catchFish()
     {
         if (this.worldObj.isRemote)

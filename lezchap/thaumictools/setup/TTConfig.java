@@ -9,6 +9,7 @@ public class TTConfig {
     public static Property thaumiumFishingPoleItemId;
     public static Property thaumiumRodItemId;
     public static Property thaumiumPoleandCarrotItemId;
+	public static Property infusedFishingPoleItemId;
 
     
 	public static void loadConfig(File configFile)
@@ -20,6 +21,7 @@ public class TTConfig {
             thaumiumRodItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.ThaumiumRod", 26432);
             thaumiumPoleandCarrotItemId = c.getItem(Configuration.CATEGORY_ITEM, "ID.ThaumiumPoleandCarrot", 26433);
             
+            infusedFishingPoleItemId = c.getItem(Configuration.CATEGORY_ITEM,  "ID.InfusedFishingPole", 26434);
             c.save();
     }
 }

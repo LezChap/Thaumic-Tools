@@ -34,7 +34,7 @@ public class FishHookFMLLoadingPlugin implements cpw.mods.fml.relauncher.IFMLLoa
 
 	@Override
 	public String getModContainerClass() {
-		return TTCore.class.getName();
+		return null;
 	}
 
 

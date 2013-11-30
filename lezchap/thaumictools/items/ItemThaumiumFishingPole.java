@@ -18,8 +18,9 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import thaumcraft.api.IRepairable;
+import lezchap.ttcore.IFishingPole;
 
-public class ItemThaumiumFishingPole extends ItemTool implements IRepairable
+public class ItemThaumiumFishingPole extends ItemTool implements IRepairable, IFishingPole 
 {
 	@SideOnly(Side.CLIENT)
     private Icon theIcon;
@@ -29,7 +30,7 @@ public class ItemThaumiumFishingPole extends ItemTool implements IRepairable
     public ItemThaumiumFishingPole(int par1, EnumToolMaterial enumtoolmaterial)
     {
     	super(par1, 1.0F, enumtoolmaterial, blocksEffectiveAgainst);
-        this.setMaxDamage(256);
+        this.setMaxDamage(143);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabTools);
     }
