@@ -37,7 +37,7 @@ import thaumcraft.api.research.ResearchPage;
 import thaumcraft.api.ItemApi;
 import thaumcraft.api.ThaumcraftApi;
 
-@Mod(modid="ThaumicTools", name="ThaumicTools", version="0.0.9",
+@Mod(modid="ThaumicTools", name="ThaumicTools", version="0.0.10",
 dependencies = "required-after:Thaumcraft")
 @NetworkMod(clientSideRequired=true)
 
@@ -98,7 +98,7 @@ public class ThaumicTools {
                 recipes.put("ThaumiumFishingPole", oreDictRecipe(new ItemStack(thaumiumFishingPoleItem, 1), new Object[] {  "  T", " TS", "K S", Character.valueOf('T'), ItemApi.getItem("itemResource", 2), Character.valueOf('S'), new ItemStack(Item.silk), Character.valueOf('K'), "stickWood"}));
                 recipes.put("ThaumiumPoleandCarrot", GameRegistry.addShapedRecipe(new ItemStack(thaumiumPoleandCarrotItem, 1), "F", "C", Character.valueOf('F'), new ItemStack(thaumiumFishingPoleItem), Character.valueOf('C'), new ItemStack(Item.carrot)));
                 
-                registerResearchItemInfused("InfusedPole", new ItemStack(infusedFishingPoleItem, 1), 3, new AspectList().add(Aspect.WATER, 15).add(Aspect.SENSES, 15).add(Aspect.LIFE,15).add(Aspect.BEAST,8), new ItemStack(thaumiumFishingPoleItem, 1), new ItemStack(Item.ingotGold), new ItemStack(Item.enderPearl), new ItemStack(Item.fishRaw), new ItemStack(Item.compass));
+                registerResearchItemInfused("InfusedPole", new ItemStack(infusedFishingPoleItem, 1), 3, new AspectList().add(Aspect.WATER, 8).add(Aspect.SENSES, 8).add(Aspect.BEAST,8), new ItemStack(thaumiumFishingPoleItem, 1), ItemApi.getItem("itemShard", 2), ItemApi.getItem("itemShard", 4), new ItemStack(Item.diamond), new ItemStack(Item.compass));
                 MinecraftForge.EVENT_BUS.register(new RenderTimer());
                 
                 
@@ -108,8 +108,8 @@ public class ThaumicTools {
         				new ItemStack(thaumiumShearsItem, 1));
         		ri.setTitle("More Thaumium Tools");
         		ri.setInfo("Shears, Poles, Hammers, Oh My!");
-        		ri.setParentsHidden("THAUMIUM");
-        		ri.setConcealed();
+        		//ri.setSiblings("THAUMIUM");
+        		ri.setAutoUnlock();
         		ri.setPages(new ResearchPage("You've discovered Thaumium can make all sorts of tools, " +
         				"and here's a few more.  Most Thaumium tools are enchantable, though some enchants " +
         				"may act differently depending on the tool.\n\n" +
@@ -119,12 +119,12 @@ public class ThaumicTools {
 					new ResearchPage((IRecipe)recipes.get("ThaumiumFishingPole")),
 					new ResearchPage((IRecipe)recipes.get("ThaumiumPoleandCarrot")));
         		
-        		ri.setConcealed();
+        		//ri.setConcealed();
         		
         		ri.registerResearchItem();
                 //new ResearchItem("MORETHAUMIUM", "ALCHEMY", new AspectList(), -2, 2, 2, new ItemStack(thaumiumShearsItem, 1)).setPages(new ResearchPage[] { new ResearchPage("tc.research_page.MORETHAUMIUM.1"), new ResearchPage((IRecipe)recipes.get("ThaumiumShears")), new ResearchPage((IRecipe)recipes.get("ThaumiumFishingPole")), new ResearchPage((IRecipe)recipes.get("ThaumiumPoleandCarrot"))}).setParents(new String[] { "THAUMIUM" }).registerResearchItem();
         		TTResearchItem ri2 = new TTResearchItem("INFUSEDPOLE", "ARTIFICE",
-        				(new AspectList().add(Aspect.WATER,2).add(Aspect.SENSES, 2).add(Aspect.LIFE,2)),
+        				(new AspectList().add(Aspect.WATER,2).add(Aspect.SENSES, 2).add(Aspect.BEAST,2)),
         				-7, 2, 2,
         				new ItemStack(infusedFishingPoleItem, 1));
         		ri2.setTitle("Fishing Pole of the Augur");
